@@ -25,12 +25,59 @@
                     <td>{{ Tipo_EPI.Tipo }}</td>
                     <td class="text-center">
                         <a href="{% url 'Editar_Tipo_Epis' Tipo_EPI.id %}" class="btn btn-sm btn-primary">Editar</a>
-                        <a href="{% url 'Excluir_Tipo_EPI' Tipo_EPI.id %}" class="btn btn-sm btn-danger">Excluir</a>
+                        <button 
+                            id="btn-delete" 
+                            class="btn btn-sm btn-danger" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modal-delete" 
+                            data-bs-TIPO_EPIDESC="{{ Tipo_EPI.Tipo }}" 
+                            data-bs-url="{% url 'Excluir_Tipo_EPI' Tipo_EPI.id %}">
+                            Excluir
+                        </button>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </section>
+
+    <div id="modal-delete" class="modal fade" tabindex="-1" aria-labelledby="modal-delete-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-delete-label">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza de que deseja excluir o Tipo de EPI <strong id="TIPO_EPIDESC"></strong>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form id="form-delete" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Excluir</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const deleteModal = document.getElementById('modal-delete');
+        
+        deleteModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const TIPO_EPIDESC = button.getAttribute('data-bs-TIPO_EPIDESC');
+            const url = button.getAttribute('data-bs-url');
+            const modalBody = deleteModal.querySelector('.modal-body');
+            const formDelete = deleteModal.querySelector('#form-delete');
+
+            modalBody.querySelector('#TIPO_EPIDESC').textContent = TIPO_EPIDESC;
+
+            formDelete.setAttribute('action', url);
+        });
+    </script>
+
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,8 +38,6 @@
             </div>
         </form>
 
-    <section class="container mt-5">
-        <h1 class="mb-4">Lista de Colaboradores</h1>
         <table class="table table-bordered table-striped">
             <thead class="table-dark">
                 <tr>
@@ -59,12 +57,58 @@
                     <td>{{ colaborador.Cadastro }}</td>
                     <td class="text-center">
                         <a href="{% url 'Editar_Colaborador' colaborador.id %}" class="btn btn-sm btn-primary me-2">Editar</a>
-                        <a href="{% url 'Excluir_Colaborador' colaborador.id %}" class="btn btn-sm btn-danger">Excluir</a>
+                        <button 
+                            id="btn-delete" 
+                            class="btn btn-sm btn-danger" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modal-delete" 
+                            data-bs-colaboradorname="{{ colaborador.Nome }}" 
+                            data-bs-url="{% url 'Excluir_Colaborador' colaborador.id %}">
+                            Excluir
+                        </button>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </section>
+
+    <div id="modal-delete" class="modal fade" tabindex="-1" aria-labelledby="modal-delete-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-delete-label">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza de que deseja excluir o colaborador <strong id="colaborador-name"></strong>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form id="form-delete" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Excluir</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const deleteModal = document.getElementById('modal-delete');
+        
+        deleteModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const colaboradorName = button.getAttribute('data-bs-colaboradorname');
+            const url = button.getAttribute('data-bs-url');
+            const modalBody = deleteModal.querySelector('.modal-body');
+            const formDelete = deleteModal.querySelector('#form-delete');
+
+            modalBody.querySelector('#colaborador-name').textContent = colaboradorName;
+
+            formDelete.setAttribute('action', url);
+        });
+    </script>
 </body>
 </html>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de EPIs</title>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -27,7 +28,15 @@
                     <td>{{ epi.Tipo_EPI.Tipo }}</td>
                     <td>
                         <a href="{% url 'Editar_EPI' epi.id %}" class="btn btn-sm btn-primary me-2">Editar</a>
-                        <a href="{% url 'Excluir_EPI' epi.id %}" class="btn btn-sm btn-danger">Excluir</a>
+                        <button 
+                            id="btn-delete" 
+                            class="btn btn-sm btn-danger" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modal-delete" 
+                            data-bs-EPIDESC="{{ epi.Descricao }}" 
+                            data-bs-url="{% url 'Excluir_EPI' epi.id %}">
+                            Excluir
+                        </button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -35,5 +44,45 @@
         </table>
     </section>
 
+    <div id="modal-delete" class="modal fade" tabindex="-1" aria-labelledby="modal-delete-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-delete-label">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza de que deseja excluir o EPI <strong id="EPIdesc"></strong>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form id="form-delete" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Excluir</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const deleteModal = document.getElementById('modal-delete');
+        
+        deleteModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const EPIdesc = button.getAttribute('data-bs-epidesc');
+            const url = button.getAttribute('data-bs-url');
+            const modalBody = deleteModal.querySelector('.modal-body');
+            const formDelete = deleteModal.querySelector('#form-delete');
+
+            modalBody.querySelector('#EPIdesc').textContent = EPIdesc;
+
+            formDelete.setAttribute('action', url);
+        });
+    </script>
+
 </body>
+
+
 </html>
