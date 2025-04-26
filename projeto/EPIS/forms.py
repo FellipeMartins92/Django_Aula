@@ -7,6 +7,8 @@ class ColaboradorForm(forms.ModelForm):
         model = Colaborador
         fields = ['Nome', 'Idade', 'Aniversario', 'Cadastro']
         widgets = {
+            'Nome': forms.TextInput(attrs={'type': 'text'}),
+            'Idade': forms.NumberInput(attrs={'type': 'number'}),
             'Aniversario': forms.DateInput(attrs={'type': 'date'}),
             'Cadastro': forms.DateInput(attrs={'type': 'date'})
         }
@@ -15,9 +17,10 @@ class ColaboradorForm(forms.ModelForm):
 class EPIForm(forms.ModelForm):
     class Meta:
         model = EPI
-        fields = ['Descricao', 'Quantidade', 'Tipo_EPI']
+        fields = ['Descricao', 'Tipo_EPI']
         widgets = {
-            'Tipo_EPI': forms.Select(),  # Dropdown para escolher o Tipo de EPI
+            'Descricao': forms.TextInput(attrs={'type': 'text'}),
+            'Tipo_EPI': forms.Select(),  
         }
 
 # Formulário para Tipo_EPI
@@ -25,12 +28,16 @@ class Tipo_EPIForm(forms.ModelForm):
     class Meta:
         model = Tipo_EPI
         fields = ['Tipo']
+        widgets = {
+            'Tipo': forms.TextInput(attrs={'type': 'text'})
+        }
 
 class EmprestimoEPIForm(forms.ModelForm):
     class Meta:
         model = Emprestimo_EPI
-        fields = ['colaborador', 'epi', 'data_devolucao']
+        fields = ['colaborador', 'epi', 'data_devolucao', 'situacao']
         
     colaborador = forms.ModelChoiceField(queryset=Colaborador.objects.all(), required=True)
     epi = forms.ModelChoiceField(queryset=EPI.objects.all(), required=True)
     data_devolucao = forms.DateField(widget=forms.SelectDateWidget(), required=True)
+    situacao = forms.ChoiceField(choices = Emprestimo_EPI.SITUACOES) 

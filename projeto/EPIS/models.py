@@ -8,15 +8,23 @@ class Colaborador(models.Model):
     Ativo = models.BooleanField(null=False,default=True)
 
 class Tipo_EPI(models.Model):
-    Tipo = models.CharField(max_length=100)
+    Tipo = models.CharField(null=False,max_length=100)
 
 class EPI(models.Model):
-    Descricao = models.CharField(max_length=100)
-    Quantidade = models.FloatField(null=False)
+    Descricao = models.CharField(null=False,max_length=100)
     Tipo_EPI = models.ForeignKey(Tipo_EPI, on_delete=models.CASCADE, related_name="epis")
 
 class Emprestimo_EPI(models.Model):
+    SITUACOES = {
+    ("1", "Emprestado"),
+    ("2", "Em Uso"),
+    ("3", "Fornecido"),
+    ("4", "Devolvido"),
+    ("5", "Danificado"),
+    ("6", "Perdido"),
+}
     colaborador = models.ForeignKey(Colaborador, on_delete=models.CASCADE, related_name="emprestimos")
     epi = models.ForeignKey(EPI, on_delete=models.CASCADE, related_name="emprestimos")
     data_devolucao = models.DateField(null=False)
+    situacao = models.CharField(max_length=3, choices=SITUACOES)
 

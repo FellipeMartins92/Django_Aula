@@ -3,9 +3,6 @@ from . import views
 
 urlpatterns = [
 
-    # Home
-    path("", views.Home),
-
     # Colaboradores
     path("Colaboradores/", views.Colaboradores, name="Colaboradores"),
     path("Cadastro_Colaborador/", views.Cadastro_Colaborador, name="cadastrar_colaborador"),
