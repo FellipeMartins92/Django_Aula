@@ -10,13 +10,10 @@
 
     {% include 'partials/Header.html' %}
 
-<!-- Container principal com margem no topo -->
 <div class="container mt-5">
 
-    <!-- Título da página -->
     <h1 class="text-center mb-4">Bem-vindo ao Sistema de Cadastro</h1>
 
-    <!-- Row (linha) com 3 colunas -->
     <div class="row">
         <!-- Coluna 1: Cadastro de Colaborador -->
         <div class="col-md-4">
@@ -41,7 +38,7 @@
                 </div>
                 <div class="card-body">
                     <p>Cadastre novos EPIs para os colaboradores.</p>
-                    <a href="/CadastroEPI/" class="btn btn-primary">Cadastrar EPI</a>
+                    <a href="/Cadastro_EPI/" class="btn btn-primary">Cadastrar EPI</a>
                     <p>Listar os EPI's.</p>
                     <a href="/EPIS/" class="btn btn-primary">Listar</a>
                 </div>
@@ -56,13 +53,14 @@
                 </div>
                 <div class="card-body">
                     <p>Cadastre os tipos de EPIs utilizados na empresa.</p>
-                    <a href="/CadastroTipo_Epis/" class="btn btn-primary">Cadastrar Tipo de EPI</a>
+                    <a href="/Cadastro_Tipo_Epis/" class="btn btn-primary">Cadastrar Tipo de EPI</a>
                     <p>Listar os Tipos de EPI.</p>
                     <a href="/Tipo_EPIS/" class="btn btn-primary">Listar</a>
                 </div>
             </div>
         </div>
 
+        <!-- Coluna 4: Empréstimos de EPI-->
         <div class="col-md-4">
             <div class="card text-center">
                 <div class="card-header">
@@ -70,7 +68,7 @@
                 </div>
                 <div class="card-body">
                     <p>Cadastre novos Empréstimos de EPI.</p>
-                    <a href="/cadastro_emprestimo/" class="btn btn-primary">Cadastrar Empréstimos</a>
+                    <a href="/Cadastro_Emprestimo/" class="btn btn-primary">Cadastrar Empréstimos</a>
                     <p>Listar os EPI's.</p>
                     <a href="/Emprestimos/" class="btn btn-primary">Listar</a>
                 </div>
@@ -80,7 +78,6 @@
 
 </div>
 
-<!-- Scripts do Bootstrap -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

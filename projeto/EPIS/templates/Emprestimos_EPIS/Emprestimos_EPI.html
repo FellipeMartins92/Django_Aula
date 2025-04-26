@@ -20,6 +20,7 @@
                     <th>EPI</th>
                     <th>Data Devolução</th>
                     <th>Situação</th>
+                    <th>Opções</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,6 +30,9 @@
                     <td>{{ emprestimo.epi.Descricao }}</td>
                     <td>{{ emprestimo.data_devolucao }}</td>
                     <td>{{ emprestimo.get_situacao_display  }}</td>
+                    <td>
+                        <a href="{% url 'Editar_Emprestimo' emprestimo.id %}" class="btn btn-sm btn-primary me-2">Editar</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

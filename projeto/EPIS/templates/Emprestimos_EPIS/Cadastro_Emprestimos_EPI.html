@@ -10,10 +10,24 @@
 
     {% include 'partials/Header.html' %}
 
+    <section>
+        {% if messages %}
+        <div class="alert alert-info" role="alert">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </section>
+
     <section class="container mt-5">
         <h2 class="mb-4">Cadastrar Empréstimo de EPI</h2>
 
-        <form method="post" action="/novo_emprestimo/">
+        {% if emprestimo %}
+            <form method="post" action="{% url 'Salvar_Emprestimo_Editado' emprestimo.id %}">
+        {% else %}
+            <form method="post" action="/Novo_Emprestimo/">
+        {% endif %}
             {% csrf_token %}
             
             <div class="mb-3">
@@ -30,6 +44,7 @@
                 <label for="epi" class="form-label">EPI</label>
                 <select class="form-control" id="epi" name="epi" required>
                     <option value="">Selecione o EPI</option>
+
                     {% for epi in epis %}
                         <option value="{{ epi.id }}">{{ epi.Descricao }}</option>
                     {% endfor %}
@@ -41,13 +56,16 @@
                 <input type="date" class="form-control" id="data_devolucao" name="data_devolucao" required>
             </div>
 
-            <select name="situacao" id="situacao">
-                {% for choice in situacao_choices %}
-                    <option value="{{ choice.0 }}">
-                        {{ choice.1 }}
-                    </option>
-                {% endfor %}
-            </select>
+            <div class="mb-3">
+                <label for="situacao" class="form-label">Situação</label>
+                <select name="situacao" id="situacao" class="form-select">
+                    {% for choice in situacao_choices %}
+                        <option value="{{ choice.0 }}">
+                            {{ choice.1 }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
     
             <button type="submit" class="btn btn-success">Salvar</button>
         </form>

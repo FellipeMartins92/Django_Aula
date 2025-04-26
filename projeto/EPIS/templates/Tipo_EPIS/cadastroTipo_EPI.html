@@ -10,10 +10,24 @@
 
     {% include 'partials/Header.html' %}
 
+    <section>
+        {% if messages %}
+        <div class="alert alert-info" role="alert">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </section>    
+
     <section class="container mt-5">
         <h2 class="mb-4">Cadastrar Tipo EPI</h2>
 
-        <form method="post" action="/NovoTipo_EPI/">
+        {% if tipo_epi %}
+            <form method="post" action="{% url 'Salvar_Tipo_EPI_Editado' tipo_epi.id %}">
+        {% else %}
+            <form method="post" action="{% url 'NovoTipo_EPI' %}">
+        {% endif %}
             {% csrf_token %}
             
             <div class="mb-3">

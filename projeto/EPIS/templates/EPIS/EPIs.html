@@ -28,8 +28,8 @@
                     <td>{{ epi.Quantidade }}</td>
                     <td>{{ epi.Tipo_EPI.Tipo }}</td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-primary me-2">Editar</a>
-                        <a href="{% url 'excluir_epi' epi.id %}" class="btn btn-sm btn-danger">Excluir</a>
+                        <a href="{% url 'Editar_EPI' epi.id %}" class="btn btn-sm btn-primary me-2">Editar</a>
+                        <a href="{% url 'Excluir_EPI' epi.id %}" class="btn btn-sm btn-danger">Excluir</a>
                     </td>
                 </tr>
                 {% endfor %}

@@ -30,8 +30,8 @@
                     <td>{{ colaborador.Aniversario }}</td>
                     <td>{{ colaborador.Cadastro }}</td>
                     <td class="text-center">
-                        <a href="#" class="btn btn-sm btn-primary me-2">Editar</a>
-                        <a href="{% url 'excluir_colaborador' colaborador.id %}" class="btn btn-sm btn-danger">Excluir</a>
+                        <a href="{% url 'Editar_Colaborador' colaborador.id %}" class="btn btn-sm btn-primary me-2">Editar</a>
+                        <a href="{% url 'Excluir_Colaborador' colaborador.id %}" class="btn btn-sm btn-danger">Excluir</a>
                     </td>
                 </tr>
                 {% endfor %}

@@ -10,10 +10,24 @@
 
     {% include 'partials/Header.html' %}
 
+    <section>
+        {% if messages %}
+        <div class="alert alert-info" role="alert">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </section>
+
     <section class="container mt-5">
         <h2 class="mb-4">Cadastrar Colaborador</h2>
-
-        <form method="post" action="/NovoColaborador/">
+            
+        {% if colaborador %}
+            <form method="post" action="{% url 'Salvar_Colaborador_Editado' colaborador.id %}">
+        {% else %}
+            <form method="post" action="/Novo_Colaborador/">
+        {% endif %}
             {% csrf_token %}
             
             <div class="mb-3">

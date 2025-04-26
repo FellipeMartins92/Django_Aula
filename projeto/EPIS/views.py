@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from .forms import *
 from .models import *
 
@@ -16,9 +17,12 @@ def NovoColaborador(request):
         form = ColaboradorForm(request.POST)
         if form.is_valid():
             form.save()  
-            return HttpResponseRedirect('/Colaboradores')
-    else:
-        form = ColaboradorForm()
+            messages.success(request, 'Cadastro realizado com sucesso!')
+            return HttpResponseRedirect('/Cadastro_Colaborador')
+        
+        else:
+            messages.error(request, 'Erro ao cadastrar cliente. Verifique os dados e tente novamente.')
+            return HttpResponseRedirect('/Cadastro_Colaborador')
     
     return render(request, 'Colaborador/cadastro_colaborador.html')
 
@@ -29,13 +33,27 @@ def ExcluirColaborador(request, Id):
         return HttpResponseRedirect('/Colaboradores')
     else:
         return HttpResponseRedirect('/Erro', status=404)
+    
+def Editar_Colaborador(request,Id):
+    colaborador = Colaborador.objects.get(id=Id)
+    return render(request,'Colaborador/cadastro_colaborador.html',{"colaborador":colaborador})
+
+def Salvar_Colaborador_Editado(request, Id):
+    colaborador = get_object_or_404(Colaborador, id=Id)
+
+    if request.method == 'POST':
+        form = ColaboradorForm(request.POST, instance=colaborador)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Editado com sucesso!')
+            return HttpResponseRedirect('/Cadastro_Colaborador') 
+        else:
+            messages.error(request, 'Erro ao Editar. Verifique os dados e tente novamente.')
+            return HttpResponseRedirect('/Cadastro_Colaborador') 
+
+    return render(request, 'Colaborador/cadastro_colaborador.html')        
 
 #EPIS
-
-from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
-from .models import EPI, Tipo_EPI
-from .forms import EPIForm
 
 def EPIS(request):
     epis = EPI.objects.all()
@@ -50,12 +68,15 @@ def NovoEPI(request):
         form = EPIForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/EPIS') 
+            messages.success(request, 'Cadastro realizado com sucesso!')
+            return HttpResponseRedirect('/Cadastro_EPI')
+        else:
+            messages.error(request, 'Erro ao cadastrar EPI. Verifique os dados e tente novamente.')
+            return HttpResponseRedirect('/Cadastro_EPI')
 
     tipo_epis = Tipo_EPI.objects.all()
     return render(request, 'EPIS/cadastro_EPI.html', {"tipo_epis": tipo_epis})
 
-# Exclui um EPI
 def ExcluirEPI(request, Id):
     try:
         epi = EPI.objects.get(id=Id)
@@ -63,6 +84,27 @@ def ExcluirEPI(request, Id):
         return redirect('/EPIS')
     except EPI.DoesNotExist:
         return HttpResponseRedirect('/Erro', status=404)
+    
+def Editar_EPI(request,Id):
+    epi = EPI.objects.get(id=Id)
+    tipo_epis = Tipo_EPI.objects.all()
+    return render(request,"EPIS/cadastro_EPI.html",{"epi": epi, "tipo_epis": tipo_epis})
+
+def Salvar_EPI_Editado(request, Id):
+    epi = get_object_or_404(EPI, id=Id)
+    tipo_epis = Tipo_EPI.objects.all()
+
+    if request.method == 'POST':
+        form = EPIForm(request.POST, instance=epi)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Editado com sucesso!')
+            return HttpResponseRedirect('/Cadastro_EPI') 
+        else:
+            messages.error(request, 'Erro ao Editar. Verifique os dados e tente novamente.')
+            return HttpResponseRedirect('/Cadastro_EPI') 
+
+    return render(request, 'EPIS/cadastro_EPI.html', {'epi': epi, "tipo_epis": tipo_epis})    
 
 #Tipo_EPIS
 
@@ -75,12 +117,35 @@ def NovoTipo_EPI(request):
         form = Tipo_EPIForm(request.POST)
         if form.is_valid():
             form.save()  
-            return redirect('/Tipo_EPIS')
+            messages.success(request, 'Cadastro realizado com sucesso!')
+            return HttpResponseRedirect('/Cadastro_Tipo_Epis')
+        else:
+            messages.error(request, 'Erro ao cadastrar Tipo de EPI. Verifique os dados e tente novamente.')
+            return HttpResponseRedirect('/Cadastro_Tipo_Epis')
         
     return render(request, 'Tipo_EPIS/cadastroTipo_EPI.html')    
 
 def CadastroTipo_Epis(request):
     return render(request,"Tipo_EPIS/cadastroTipo_EPI.html")
+
+def Editar_Tipo_EPI(request,Id):
+    tipo_epi = Tipo_EPI.objects.get(id=Id)
+    return render(request,"Tipo_EPIS/cadastroTipo_EPI.html",{"tipo_epi": tipo_epi})
+
+def Salvar_Tipo_EPI_Editado(request, Id):
+    tipo_epi = get_object_or_404(Tipo_EPI, id=Id)
+
+    if request.method == 'POST':
+        form = Tipo_EPIForm(request.POST, instance=tipo_epi)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Editado com sucesso!')
+            return HttpResponseRedirect('/Cadastro_Tipo_Epis') 
+        else:
+            messages.error(request, 'Erro ao Editar. Verifique os dados e tente novamente.')
+            return HttpResponseRedirect('/Cadastro_Tipo_Epis') 
+
+    return render(request, 'Tipo_EPIS/cadastroTipo_EPI.html', {'tipo_epi': tipo_epi})
 
 def ExcluirTipo_EPI(request, Id):
     Tipo_EPIs = Tipo_EPI.objects.filter(id=Id).first()
@@ -95,7 +160,7 @@ def ExcluirTipo_EPI(request, Id):
 def CadastroEmprestimo(request):
     colaboradores = Colaborador.objects.all()
     epis = EPI.objects.all()
-    situacao_choices = Emprestimo_EPI.SITUACOES
+    situacao_choices = [choice for choice in Emprestimo_EPI.SITUACOES if choice[1] in ['Emprestado', 'Em Uso','Fornecido']]
     return render(request, "Emprestimos_EPIS/Cadastro_Emprestimos_EPI.html", {"colaboradores": colaboradores, "epis": epis, 'situacao_choices': situacao_choices,})
 
 def NovoEmprestimo(request):
@@ -104,11 +169,38 @@ def NovoEmprestimo(request):
         print(form.is_valid())
         if form.is_valid():
             form.save() 
-        return redirect('/Emprestimos')  
+            messages.success(request, 'Cadastro realizado com sucesso!')
+            return HttpResponseRedirect('/Cadastro_Emprestimo')
+        else:
+            messages.error(request, 'Erro ao cadastrar empréstimo. Verifique os dados e tente novamente.')
+            return HttpResponseRedirect('/Cadastro_Emprestimo')
 
     return render(request, 'Emprestimos_EPIS/Cadastro_Emprestimos_EPI.html')
 
 def Emprestimos(request):
     emprestimos = Emprestimo_EPI.objects.all()
     return render(request, 'Emprestimos_EPIS/Emprestimos_EPI.html', {'emprestimos': emprestimos})
+
+def Editar_Emprestimos(request,Id):
+    emprestimo = get_object_or_404(Emprestimo_EPI, id=Id)    
+    colaboradores = get_object_or_404(Colaborador, id=emprestimo.colaborador.id)
+    epis = get_object_or_404(EPI, id=emprestimo.epi.id)    
+    situacao_choices = [choice for choice in Emprestimo_EPI.SITUACOES if choice[1] not in ['Emprestado', 'Em Uso', 'Fornecido']]
+
+    return render(request,'Emprestimos_EPIS/Cadastro_Emprestimos_EPI.html',{"emprestimo":emprestimo,"colaboradores": colaboradores, "epis": epis, 'situacao_choices': situacao_choices,})
+
+def Salvar_Emprestimos_Editado(request, Id):
+    emprestimo = get_object_or_404(Emprestimo_EPI, id=Id)
+
+    if request.method == 'POST':
+        form = EmprestimoEPIForm(request.POST, instance=emprestimo)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Editado com sucesso!')
+            return HttpResponseRedirect('/Cadastro_Emprestimo') 
+        else:
+            messages.error(request, 'Erro ao Editar. Verifique os dados e tente novamente.')
+            return HttpResponseRedirect('/Cadastro_Emprestimo') 
+
+    return render(request, 'Emprestimos_EPIS/Cadastro_Emprestimos_EPI.html')        
   

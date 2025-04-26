@@ -10,24 +10,32 @@
 
     {% include 'partials/Header.html' %}
 
+    <section>
+        {% if messages %}
+        <div class="alert alert-info" role="alert">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </section>
+
     <section class="container mt-5">
         <h2 class="mb-4">Cadastrar EPI</h2>
-        <form method="post" action="/NovoEPI/">
+
+        {% if epi %}
+            <form method="post" action="{% url 'Salvar_EPI_Editado' epi.id %}">
+        {% else %}
+            <form method="post" action="{% url 'Novo_EPI' %}">
+        {% endif %}
+
             {% csrf_token %}
             
-            <!-- Descrição do EPI -->
             <div class="mb-3">
                 <label for="Descricao" class="form-label">Descrição</label>
                 <input type="text" class="form-control" id="Descricao" name="Descricao" required maxlength="100">
             </div>
     
-            <!-- Quantidade do EPI -->
-            <div class="mb-3">
-                <label for="Quantidade" class="form-label">Quantidade</label>
-                <input type="number" class="form-control" id="Quantidade" name="Quantidade" required min="0">
-            </div>
-    
-            <!-- Tipo do EPI (dropdown) -->
             <div class="mb-3">
                 <label for="Tipo_EPI" class="form-label">Tipo de EPI</label>
                 <select class="form-control" id="Tipo_EPI" name="Tipo_EPI" required>
@@ -37,7 +45,6 @@
                 </select>
             </div>
     
-            <!-- Botão de submit -->
             <button type="submit" class="btn btn-success">Salvar</button>
         </form>
     </section>
