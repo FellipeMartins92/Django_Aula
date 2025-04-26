@@ -183,8 +183,8 @@ def Emprestimos(request):
 
 def Editar_Emprestimos(request,Id):
     emprestimo = get_object_or_404(Emprestimo_EPI, id=Id)    
-    colaboradores = get_object_or_404(Colaborador, id=emprestimo.colaborador.id)
-    epis = get_object_or_404(EPI, id=emprestimo.epi.id)    
+    colaboradores = [get_object_or_404(Colaborador, id=emprestimo.colaborador.id)]
+    epis = [get_object_or_404(EPI, id=emprestimo.epi.id)]    
     situacao_choices = [choice for choice in Emprestimo_EPI.SITUACOES if choice[1] not in ['Emprestado', 'Em Uso', 'Fornecido']]
 
     return render(request,'Emprestimos_EPIS/Cadastro_Emprestimos_EPI.html',{"emprestimo":emprestimo,"colaboradores": colaboradores, "epis": epis, 'situacao_choices': situacao_choices,})
