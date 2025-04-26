@@ -12,6 +12,34 @@
 
     <section class="container mt-5">
         <h1 class="mb-4">Lista de Colaboradores</h1>
+        
+        <!-- Seção de Filtros -->
+        <form method="GET" action="{% url 'Colaboradores' %}" class="mb-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="nome" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="nome" name="nome" value="{{ request.GET.nome }}" placeholder="Buscar por nome">
+                </div>
+                <div class="col-md-4">
+                    <label for="idade" class="form-label">Idade</label>
+                    <input type="number" class="form-control" id="idade" name="idade" value="{{ request.GET.idade }}" placeholder="Buscar por idade">
+                </div>
+                <div class="col-md-4">
+                    <label for="aniversario" class="form-label">Aniversário</label>
+                    <input type="date" class="form-control" id="aniversario" name="aniversario" value="{{ request.GET.aniversario }}">
+                </div>
+                <div class="col-md-4">
+                    <label for="data_cadastro" class="form-label">Data Cadastro</label>
+                    <input type="date" class="form-control" id="data_cadastro" name="data_cadastro" value="{{ request.GET.data_cadastro }}">
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                </div>
+            </div>
+        </form>
+
+    <section class="container mt-5">
+        <h1 class="mb-4">Lista de Colaboradores</h1>
         <table class="table table-bordered table-striped">
             <thead class="table-dark">
                 <tr>

@@ -5,9 +5,41 @@ from .forms import *
 from .models import *
 
 #Colaboradores
+from django.shortcuts import render
+from .models import Colaborador
+from datetime import datetime
+
 def Colaboradores(request):
     colaboradores = Colaborador.objects.all()
-    return render(request,"Colaborador/colaboradores.html",{"colaboradores": colaboradores})
+
+    if request.method == 'GET':
+        nome = request.GET.get('nome', '')
+        idade = request.GET.get('idade', '')
+        aniversario = request.GET.get('aniversario', '')
+        data_cadastro = request.GET.get('data_cadastro', '')
+
+        if nome:
+            colaboradores = colaboradores.filter(Nome__icontains=nome)
+
+        if idade:
+            colaboradores = colaboradores.filter(Idade=idade)
+
+        if aniversario:
+            try:
+                aniversario = datetime.strptime(aniversario, '%Y-%m-%d').date()
+                colaboradores = colaboradores.filter(Aniversario=aniversario)
+            except ValueError:
+                pass
+
+        if data_cadastro:
+            try:
+                data_cadastro = datetime.strptime(data_cadastro, '%Y-%m-%d').date()
+                colaboradores = colaboradores.filter(Cadastro=data_cadastro)
+            except ValueError:
+                pass  
+
+    return render(request, "Colaborador/colaboradores.html", {"colaboradores": colaboradores})
+
 
 def Cadastro_Colaborador(request):
     return render(request,"Colaborador/cadastro_colaborador.html")
@@ -178,7 +210,24 @@ def NovoEmprestimo(request):
     return render(request, 'Emprestimos_EPIS/Cadastro_Emprestimos_EPI.html')
 
 def Emprestimos(request):
+
     emprestimos = Emprestimo_EPI.objects.all()
+
+    if request.method == 'GET':
+        colaborador = request.GET.get('colaborador', '')
+        epi = request.GET.get('epi', '')
+        data_devolucao = request.GET.get('data_devolucao', '')
+        situacao = request.GET.get('situacao', '')
+
+        if colaborador:
+            emprestimos = emprestimos.filter(colaborador__Nome__icontains=colaborador)
+        if epi:
+            emprestimos = emprestimos.filter(epi__Descricao__icontains=epi)
+        if data_devolucao:
+            emprestimos = emprestimos.filter(data_devolucao=data_devolucao)
+        if situacao:
+            emprestimos = emprestimos.filter(situacao=situacao)
+
     return render(request, 'Emprestimos_EPIS/Emprestimos_EPI.html', {'emprestimos': emprestimos})
 
 def Editar_Emprestimos(request,Id):
@@ -193,14 +242,22 @@ def Salvar_Emprestimos_Editado(request, Id):
     emprestimo = get_object_or_404(Emprestimo_EPI, id=Id)
 
     if request.method == 'POST':
-        form = EmprestimoEPIForm(request.POST, instance=emprestimo)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Editado com sucesso!')
-            return HttpResponseRedirect('/Cadastro_Emprestimo') 
-        else:
-            messages.error(request, 'Erro ao Editar. Verifique os dados e tente novamente.')
-            return HttpResponseRedirect('/Cadastro_Emprestimo') 
+        colaborador = request.POST.get('colaborador', emprestimo.colaborador.id)
+        epi = request.POST.get('epi', emprestimo.epi.id)
+        situacao = request.POST.get('situacao', emprestimo.situacao) 
+        data_devolucao = request.POST.get('data_devolucao', emprestimo.data_devolucao)
 
-    return render(request, 'Emprestimos_EPIS/Cadastro_Emprestimos_EPI.html')        
-  
+        data_emprestimo = emprestimo.data_emprestimo  
+
+        emprestimo.colaborador_id = colaborador
+        emprestimo.epi_id = epi
+        emprestimo.situacao = situacao
+        emprestimo.data_devolucao = data_devolucao
+        emprestimo.data_emprestimo = data_emprestimo 
+
+        emprestimo.save()
+        messages.success(request, 'Editado com sucesso!')
+        return HttpResponseRedirect('/Cadastro_Emprestimo') 
+    else:
+        messages.error(request, 'Erro ao Editar. Verifique os dados e tente novamente.')
+        return HttpResponseRedirect('/Cadastro_Emprestimo') 

@@ -1,10 +1,11 @@
 from django.db import models
+from django.utils.timezone import now
 
 class Colaborador(models.Model):
     Nome = models.CharField(max_length=100,null=False)
     Idade = models.IntegerField(null=False)
     Aniversario = models.DateField(null=False)
-    Cadastro = models.DateField(null=False)
+    Cadastro = models.DateField(default=now,null=False)
     Ativo = models.BooleanField(null=False,default=True)
 
 class Tipo_EPI(models.Model):
@@ -25,6 +26,7 @@ class Emprestimo_EPI(models.Model):
 }
     colaborador = models.ForeignKey(Colaborador, on_delete=models.CASCADE, related_name="emprestimos")
     epi = models.ForeignKey(EPI, on_delete=models.CASCADE, related_name="emprestimos")
-    data_devolucao = models.DateField(null=False)
+    data_emprestimo = models.DateField(null=True,blank=True)
+    data_devolucao = models.DateField(null=True,blank=True)
     situacao = models.CharField(max_length=3, choices=SITUACOES)
 

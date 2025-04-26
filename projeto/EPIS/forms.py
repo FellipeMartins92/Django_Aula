@@ -5,12 +5,11 @@ from .models import *
 class ColaboradorForm(forms.ModelForm):
     class Meta:
         model = Colaborador
-        fields = ['Nome', 'Idade', 'Aniversario', 'Cadastro']
+        fields = ['Nome', 'Idade', 'Aniversario']
         widgets = {
             'Nome': forms.TextInput(attrs={'type': 'text'}),
             'Idade': forms.NumberInput(attrs={'type': 'number'}),
-            'Aniversario': forms.DateInput(attrs={'type': 'date'}),
-            'Cadastro': forms.DateInput(attrs={'type': 'date'})
+            'Aniversario': forms.DateInput(attrs={'type': 'date'})
         }
 
 # Formulário para EPI
@@ -35,9 +34,10 @@ class Tipo_EPIForm(forms.ModelForm):
 class EmprestimoEPIForm(forms.ModelForm):
     class Meta:
         model = Emprestimo_EPI
-        fields = ['colaborador', 'epi', 'data_devolucao', 'situacao']
+        fields = ['colaborador', 'epi', 'data_devolucao', 'situacao','data_emprestimo']
         
     colaborador = forms.ModelChoiceField(queryset=Colaborador.objects.all(), required=True)
     epi = forms.ModelChoiceField(queryset=EPI.objects.all(), required=True)
-    data_devolucao = forms.DateField(widget=forms.SelectDateWidget(), required=True)
+    data_emprestimo = forms.DateField(widget=forms.SelectDateWidget(), required=False)
+    data_devolucao = forms.DateField(widget=forms.SelectDateWidget(), required=False)
     situacao = forms.ChoiceField(choices = Emprestimo_EPI.SITUACOES) 

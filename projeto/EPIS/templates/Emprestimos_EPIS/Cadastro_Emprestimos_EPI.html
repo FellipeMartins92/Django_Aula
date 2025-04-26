@@ -50,11 +50,18 @@
                     {% endfor %}
                 </select>
             </div>
-    
+
+            {% if emprestimo %}
             <div class="mb-3">
                 <label for="data_devolucao" class="form-label">Data de Devolução</label>
                 <input type="date" class="form-control" id="data_devolucao" name="data_devolucao" required>
             </div>
+            {% else %}
+            <div class="mb-3">
+                <label for="data_emprestimo" class="form-label">Data de Empréstimo</label>
+                <input type="date" class="form-control" id="data_emprestimo" name="data_emprestimo" required>
+            </div>
+            {% endif %}
 
             <div class="mb-3">
                 <label for="situacao" class="form-label">Situação</label>

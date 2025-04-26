@@ -13,11 +13,32 @@
     <section class="container mt-5">
         <h1 class="mb-4">Lista de Empréstimos de EPIs</h1>
 
+        <form method="GET" action="{% url 'Emprestimos' %}" class="mb-4">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="colaborador" class="form-label">Colaborador</label>
+                    <input type="text" class="form-control" id="colaborador" name="colaborador" value="{{ request.GET.colaborador }}" placeholder="Buscar por nome do colaborador">
+                </div>
+                <div class="col-md-3">
+                    <label for="epi" class="form-label">EPI</label>
+                    <input type="text" class="form-control" id="epi" name="epi" value="{{ request.GET.epi }}" placeholder="Buscar por EPI">
+                </div>
+                <div class="col-md-3">
+                    <label for="data_devolucao" class="form-label">Data Devolução</label>
+                    <input type="date" class="form-control" id="data_devolucao" name="data_devolucao" value="{{ request.GET.data_devolucao }}">
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                </div>
+            </div>
+        </form>        
+
         <table class="table table-bordered table-striped">
             <thead class="table-dark">
                 <tr>
                     <th>Colaborador</th>
                     <th>EPI</th>
+                    <th>Data Empréstimo</th>                    
                     <th>Data Devolução</th>
                     <th>Situação</th>
                     <th>Opções</th>
@@ -28,7 +49,14 @@
                 <tr>
                     <td>{{ emprestimo.colaborador.Nome }}</td>
                     <td>{{ emprestimo.epi.Descricao }}</td>
-                    <td>{{ emprestimo.data_devolucao }}</td>
+                    <td>{{ emprestimo.data_emprestimo }}</td>
+                    <td>
+                        {% if emprestimo.data_devolucao %}
+                            {{ emprestimo.data_devolucao }}
+                        {% else %}
+                            <p>Sem Data</p>
+                        {% endif %}
+                    </td>
                     <td>{{ emprestimo.get_situacao_display  }}</td>
                     <td>
                         <a href="{% url 'Editar_Emprestimo' emprestimo.id %}" class="btn btn-sm btn-primary me-2">Editar</a>
